@@ -1,6 +1,14 @@
 export const TABLE_COLUMNS = [
+  // {
+  //   name: "food",
+  //   label: "Food",
+  //   options: {
+  //     filter: true,
+  //     sort: true,
+  //   },
+  // },
   {
-    name: "food",
+    name: "description",
     label: "Food",
     options: {
       filter: true,
@@ -8,7 +16,7 @@ export const TABLE_COLUMNS = [
     },
   },
   {
-    name: "kCal",
+    name: "foodNutrients[0].value",
     label: "Kcal",
     options: {
       filter: true,
