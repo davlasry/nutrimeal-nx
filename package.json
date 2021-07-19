@@ -27,10 +27,14 @@
   },
   "private": true,
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "document-register-element": "1.13.1",
+    "firebase": "^8.7.1",
+    "mui-datatables": "^3.7.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-firebase-hooks": "^3.0.4",
     "regenerator-runtime": "0.13.7",
     "tslib": "^2.0.0"
   },
