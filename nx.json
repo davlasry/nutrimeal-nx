@@ -30,6 +30,9 @@
     "nutrimeal": {
       "tags": []
     },
+    "nutrimeal-api": {
+      "tags": []
+    },
     "nutrimeal-e2e": {
       "tags": [],
       "implicitDependencies": ["nutrimeal"]
