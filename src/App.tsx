@@ -1,12 +1,12 @@
-import React from "react";
-import "./App.css";
-import FoodTable from "./components/FoodTable/FoodTable";
+import React from 'react';
+import './App.css';
+import FoodTablePage from './components/FoodTablePage/FoodTablePage';
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <h1>Nutrimeal</h1>
-      <FoodTable />
+      <FoodTablePage />
     </div>
   );
 }

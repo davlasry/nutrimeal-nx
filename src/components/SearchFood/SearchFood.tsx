@@ -1,25 +1,20 @@
-import React, { FormEvent, useState } from "react";
-import { searchFood } from "../../services/fdc-api.service";
-import { firestore } from "../../firebase";
-import { useCollectionData } from "react-firebase-hooks/firestore";
-import { Food } from "../../interfaces/food.interface";
+import React, { FormEvent, useState } from 'react';
+import { searchFoodSpoonacular } from '../../services/fdc-api.service';
+import { firestore } from '../../firebase';
+import { Food } from '../../interfaces/food.interface';
 
 const SearchFood = () => {
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>('');
   const [foodResults, setFoodResults] = useState<Food[]>([]);
 
-  const foodsRef = firestore.collection("foods");
-  const [foods] = useCollectionData<Food[]>();
+  const foodsRef = firestore.collection('foods');
 
   const onSubmitFood = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const result = await searchFood(searchValue);
+    // const result = await searchFood(searchValue);
+    const result = await searchFoodSpoonacular(searchValue);
     console.log(result);
     setFoodResults(result.foods);
-  };
-
-  const addFood = (foodData: Food) => {
-    foodsRef.add(foodData);
   };
 
   return (
@@ -28,22 +23,22 @@ const SearchFood = () => {
 
       <form onSubmit={onSubmitFood}>
         <input
-          type="text"
+          type='text'
           value={searchValue}
           onChange={({ target }: any) => setSearchValue(target.value)}
         />
-        <button type="submit">Search</button>
+        <button type='submit'>Search</button>
 
         <div>
           <h3>Results</h3>
           <div>
             {
               // @ts-ignore
-              foodResults.map((food) => (
-                <>
-                  <div key={food.fdcId}>{food.description}</div>
-                  <button onClick={() => addFood(food)}>Add</button>
-                </>
+              foodResults?.map((food) => (
+                <div key={food.fdcId}>
+                  <div>{food.description}</div>
+                  <button onClick={() => foodsRef.add(food)}>Add</button>
+                </div>
               ))
             }
           </div>
