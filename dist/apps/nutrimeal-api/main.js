@@ -148,11 +148,16 @@ const tslib_1 = __webpack_require__(/*! tslib */ "tslib");
 const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
 const app_controller_1 = __webpack_require__(/*! ./app.controller */ "./apps/nutrimeal-api/src/app/app.controller.ts");
 const app_service_1 = __webpack_require__(/*! ./app.service */ "./apps/nutrimeal-api/src/app/app.service.ts");
+const mongoose_1 = __webpack_require__(/*! @nestjs/mongoose */ "@nestjs/mongoose");
+const products_module_1 = __webpack_require__(/*! ./products/products.module */ "./apps/nutrimeal-api/src/app/products/products.module.ts");
 let AppModule = class AppModule {
 };
 AppModule = tslib_1.__decorate([
     common_1.Module({
-        imports: [],
+        imports: [
+            products_module_1.ProductsModule,
+            mongoose_1.MongooseModule.forRoot('mongodb+srv://davidl:PjfhdTgRXBHWC3PH@cluster0.qikgx.mongodb.net/nutrimeal?retryWrites=true&w=majority'),
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })
@@ -184,6 +189,225 @@ AppService = tslib_1.__decorate([
     common_1.Injectable()
 ], AppService);
 exports.AppService = AppService;
+
+
+/***/ }),
+
+/***/ "./apps/nutrimeal-api/src/app/products/product.model.ts":
+/*!**************************************************************!*\
+  !*** ./apps/nutrimeal-api/src/app/products/product.model.ts ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProductSchema = void 0;
+const mongoose = __webpack_require__(/*! mongoose */ "mongoose");
+exports.ProductSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    price: { type: Number, required: true },
+});
+
+
+/***/ }),
+
+/***/ "./apps/nutrimeal-api/src/app/products/products.controller.ts":
+/*!********************************************************************!*\
+  !*** ./apps/nutrimeal-api/src/app/products/products.controller.ts ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var _a;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProductsController = void 0;
+const tslib_1 = __webpack_require__(/*! tslib */ "tslib");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const products_service_1 = __webpack_require__(/*! ./products.service */ "./apps/nutrimeal-api/src/app/products/products.service.ts");
+let ProductsController = class ProductsController {
+    constructor(productsService) {
+        this.productsService = productsService;
+    }
+    addProduct(prodTitle, prodDesc, prodPrice) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const generatedId = yield this.productsService.insertProduct(prodTitle, prodDesc, prodPrice);
+            return { id: generatedId };
+        });
+    }
+    getAllProducts() {
+        return this.productsService.getProducts();
+    }
+    getProduct(prodId) {
+        return this.productsService.getSingleProduct(prodId);
+    }
+    updateProduct(prodId, prodTitle, prodDesc, prodPrice) {
+        this.productsService.updateProduct(prodId, prodTitle, prodDesc, prodPrice);
+        return null;
+    }
+    removeProduct(prodId) {
+        this.productsService.deleteProduct(prodId);
+        return null;
+    }
+};
+tslib_1.__decorate([
+    common_1.Post(),
+    tslib_1.__param(0, common_1.Body('title')),
+    tslib_1.__param(1, common_1.Body('description')),
+    tslib_1.__param(2, common_1.Body('price')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String, String, Number]),
+    tslib_1.__metadata("design:returntype", Promise)
+], ProductsController.prototype, "addProduct", null);
+tslib_1.__decorate([
+    common_1.Get(),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", []),
+    tslib_1.__metadata("design:returntype", void 0)
+], ProductsController.prototype, "getAllProducts", null);
+tslib_1.__decorate([
+    common_1.Get(':id'),
+    tslib_1.__param(0, common_1.Param('id')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String]),
+    tslib_1.__metadata("design:returntype", void 0)
+], ProductsController.prototype, "getProduct", null);
+tslib_1.__decorate([
+    common_1.Patch(':id'),
+    tslib_1.__param(0, common_1.Param('id')),
+    tslib_1.__param(1, common_1.Body('title')),
+    tslib_1.__param(2, common_1.Body('description')),
+    tslib_1.__param(3, common_1.Body('price')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String, String, String, Number]),
+    tslib_1.__metadata("design:returntype", void 0)
+], ProductsController.prototype, "updateProduct", null);
+tslib_1.__decorate([
+    common_1.Delete(':id'),
+    tslib_1.__param(0, common_1.Param('id')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String]),
+    tslib_1.__metadata("design:returntype", void 0)
+], ProductsController.prototype, "removeProduct", null);
+ProductsController = tslib_1.__decorate([
+    common_1.Controller('products'),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof products_service_1.ProductsService !== "undefined" && products_service_1.ProductsService) === "function" ? _a : Object])
+], ProductsController);
+exports.ProductsController = ProductsController;
+
+
+/***/ }),
+
+/***/ "./apps/nutrimeal-api/src/app/products/products.module.ts":
+/*!****************************************************************!*\
+  !*** ./apps/nutrimeal-api/src/app/products/products.module.ts ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProductsModule = void 0;
+const tslib_1 = __webpack_require__(/*! tslib */ "tslib");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const mongoose_1 = __webpack_require__(/*! @nestjs/mongoose */ "@nestjs/mongoose");
+const products_service_1 = __webpack_require__(/*! ./products.service */ "./apps/nutrimeal-api/src/app/products/products.service.ts");
+const products_controller_1 = __webpack_require__(/*! ./products.controller */ "./apps/nutrimeal-api/src/app/products/products.controller.ts");
+const product_model_1 = __webpack_require__(/*! ./product.model */ "./apps/nutrimeal-api/src/app/products/product.model.ts");
+let ProductsModule = class ProductsModule {
+};
+ProductsModule = tslib_1.__decorate([
+    common_1.Module({
+        imports: [
+            mongoose_1.MongooseModule.forFeature([{ name: 'Product', schema: product_model_1.ProductSchema }]),
+        ],
+        controllers: [products_controller_1.ProductsController],
+        providers: [products_service_1.ProductsService],
+    })
+], ProductsModule);
+exports.ProductsModule = ProductsModule;
+
+
+/***/ }),
+
+/***/ "./apps/nutrimeal-api/src/app/products/products.service.ts":
+/*!*****************************************************************!*\
+  !*** ./apps/nutrimeal-api/src/app/products/products.service.ts ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var _a;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProductsService = void 0;
+const tslib_1 = __webpack_require__(/*! tslib */ "tslib");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const mongoose_1 = __webpack_require__(/*! @nestjs/mongoose */ "@nestjs/mongoose");
+const mongoose_2 = __webpack_require__(/*! mongoose */ "mongoose");
+let ProductsService = class ProductsService {
+    constructor(productModel) {
+        this.productModel = productModel;
+        this.products = [];
+    }
+    insertProduct(title, desc, price) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const prodId = Math.random().toString();
+            const newProduct = new this.productModel({
+                title,
+                description: desc,
+                price,
+            });
+            const result = yield newProduct.save();
+            return result.id;
+        });
+    }
+    getProducts() {
+        return [...this.products];
+    }
+    getSingleProduct(productId) {
+        const product = this.findProduct(productId)[0];
+        return Object.assign({}, product);
+    }
+    updateProduct(productId, title, desc, price) {
+        const [product, index] = this.findProduct(productId);
+        const updatedProduct = Object.assign({}, product);
+        if (title) {
+            updatedProduct.title = title;
+        }
+        if (desc) {
+            updatedProduct.description = desc;
+        }
+        if (price) {
+            updatedProduct.price = price;
+        }
+        // this.products[index] = updatedProduct;
+    }
+    deleteProduct(prodId) {
+        const index = this.findProduct(prodId)[1];
+        this.products.splice(index, 1);
+    }
+    findProduct(id) {
+        const productIndex = this.products.findIndex((prod) => prod.id === id);
+        const product = this.products[productIndex];
+        if (!product) {
+            throw new common_1.NotFoundException('Could not find product.');
+        }
+        return [product, productIndex];
+    }
+};
+ProductsService = tslib_1.__decorate([
+    common_1.Injectable(),
+    tslib_1.__param(0, mongoose_1.InjectModel('Product')),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof mongoose_2.Model !== "undefined" && mongoose_2.Model) === "function" ? _a : Object])
+], ProductsService);
+exports.ProductsService = ProductsService;
 
 
 /***/ }),
@@ -229,7 +453,7 @@ bootstrap();
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/davidlasry/dev/nutrimeal-nx/nutrimeal/apps/nutrimeal-api/src/main.ts */"./apps/nutrimeal-api/src/main.ts");
+module.exports = __webpack_require__(/*! /Users/davidlasry/dev/nutrimeal-nx/apps/nutrimeal-api/src/main.ts */"./apps/nutrimeal-api/src/main.ts");
 
 
 /***/ }),
@@ -253,6 +477,28 @@ module.exports = require("@nestjs/common");
 /***/ (function(module, exports) {
 
 module.exports = require("@nestjs/core");
+
+/***/ }),
+
+/***/ "@nestjs/mongoose":
+/*!***********************************!*\
+  !*** external "@nestjs/mongoose" ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("@nestjs/mongoose");
+
+/***/ }),
+
+/***/ "mongoose":
+/*!***************************!*\
+  !*** external "mongoose" ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("mongoose");
 
 /***/ }),
 

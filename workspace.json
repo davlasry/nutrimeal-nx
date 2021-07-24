@@ -1,6 +1,19 @@
 {
   "version": 2,
   "projects": {
+    "data": {
+      "root": "libs/data",
+      "sourceRoot": "libs/data/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/data/**/*.ts"]
+          }
+        }
+      }
+    },
     "nutrimeal": {
       "root": "apps/nutrimeal",
       "sourceRoot": "apps/nutrimeal/src",
@@ -8,9 +21,7 @@
       "targets": {
         "build": {
           "executor": "@nrwl/web:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/nutrimeal",
             "index": "apps/nutrimeal/src/index.html",
@@ -21,9 +32,7 @@
               "apps/nutrimeal/src/favicon.ico",
               "apps/nutrimeal/src/assets"
             ],
-            "styles": [
-              "apps/nutrimeal/src/styles.scss"
-            ],
+            "styles": ["apps/nutrimeal/src/styles.scss"],
             "scripts": [],
             "webpackConfig": "@nrwl/react/plugins/webpack"
           },
@@ -68,16 +77,12 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/nutrimeal/**/*.{ts,tsx,js,jsx}"
-            ]
+            "lintFilePatterns": ["apps/nutrimeal/**/*.{ts,tsx,js,jsx}"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/nutrimeal"
-          ],
+          "outputs": ["coverage/apps/nutrimeal"],
           "options": {
             "jestConfig": "apps/nutrimeal/jest.config.js",
             "passWithNoTests": true
@@ -92,16 +97,12 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": [
-            "{options.outputPath}"
-          ],
+          "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/nutrimeal-api",
             "main": "apps/nutrimeal-api/src/main.ts",
             "tsConfig": "apps/nutrimeal-api/tsconfig.app.json",
-            "assets": [
-              "apps/nutrimeal-api/src/assets"
-            ]
+            "assets": ["apps/nutrimeal-api/src/assets"]
           },
           "configurations": {
             "production": {
@@ -126,16 +127,12 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/nutrimeal-api/**/*.ts"
-            ]
+            "lintFilePatterns": ["apps/nutrimeal-api/**/*.ts"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": [
-            "coverage/apps/nutrimeal-api"
-          ],
+          "outputs": ["coverage/apps/nutrimeal-api"],
           "options": {
             "jestConfig": "apps/nutrimeal-api/jest.config.js",
             "passWithNoTests": true
@@ -164,9 +161,7 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/nutrimeal-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/nutrimeal-e2e/**/*.{js,ts}"]
           }
         }
       }
