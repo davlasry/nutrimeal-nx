@@ -27,18 +27,18 @@
     ]
   },
   "projects": {
+    "nutrimeal-client": {
+      "tags": []
+    },
     "data": {
       "tags": []
     },
-    "nutrimeal": {
-      "tags": []
-    },
-    "nutrimeal-api": {
+    "nutrimeal-server": {
       "tags": []
     },
     "nutrimeal-e2e": {
       "tags": [],
-      "implicitDependencies": ["nutrimeal"]
+      "implicitDependencies": ["nutrimeal-client"]
     }
   }
 }

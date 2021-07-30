@@ -150,13 +150,19 @@ const app_controller_1 = __webpack_require__(/*! ./app.controller */ "./apps/nut
 const app_service_1 = __webpack_require__(/*! ./app.service */ "./apps/nutrimeal-api/src/app/app.service.ts");
 const mongoose_1 = __webpack_require__(/*! @nestjs/mongoose */ "@nestjs/mongoose");
 const products_module_1 = __webpack_require__(/*! ./products/products.module */ "./apps/nutrimeal-api/src/app/products/products.module.ts");
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+const search_module_1 = __webpack_require__(/*! ./search/search.module */ "./apps/nutrimeal-api/src/app/search/search.module.ts");
 let AppModule = class AppModule {
 };
 AppModule = tslib_1.__decorate([
     common_1.Module({
         imports: [
             products_module_1.ProductsModule,
+            search_module_1.SearchModule,
             mongoose_1.MongooseModule.forRoot('mongodb+srv://davidl:PjfhdTgRXBHWC3PH@cluster0.qikgx.mongodb.net/nutrimeal?retryWrites=true&w=majority'),
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+            }),
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
@@ -412,6 +418,118 @@ exports.ProductsService = ProductsService;
 
 /***/ }),
 
+/***/ "./apps/nutrimeal-api/src/app/search/search.controller.ts":
+/*!****************************************************************!*\
+  !*** ./apps/nutrimeal-api/src/app/search/search.controller.ts ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var _a;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SearchController = void 0;
+const tslib_1 = __webpack_require__(/*! tslib */ "tslib");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const search_service_1 = __webpack_require__(/*! ./search.service */ "./apps/nutrimeal-api/src/app/search/search.service.ts");
+let SearchController = class SearchController {
+    constructor(searchService) {
+        this.searchService = searchService;
+    }
+    searchFood(query) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            return yield this.searchService.searchFood(query);
+        });
+    }
+};
+tslib_1.__decorate([
+    common_1.Get(),
+    tslib_1.__param(0, common_1.Query('query')),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [String]),
+    tslib_1.__metadata("design:returntype", Promise)
+], SearchController.prototype, "searchFood", null);
+SearchController = tslib_1.__decorate([
+    common_1.Controller('search'),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof search_service_1.SearchService !== "undefined" && search_service_1.SearchService) === "function" ? _a : Object])
+], SearchController);
+exports.SearchController = SearchController;
+
+
+/***/ }),
+
+/***/ "./apps/nutrimeal-api/src/app/search/search.module.ts":
+/*!************************************************************!*\
+  !*** ./apps/nutrimeal-api/src/app/search/search.module.ts ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SearchModule = void 0;
+const tslib_1 = __webpack_require__(/*! tslib */ "tslib");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const search_service_1 = __webpack_require__(/*! ./search.service */ "./apps/nutrimeal-api/src/app/search/search.service.ts");
+const search_controller_1 = __webpack_require__(/*! ./search.controller */ "./apps/nutrimeal-api/src/app/search/search.controller.ts");
+let SearchModule = class SearchModule {
+};
+SearchModule = tslib_1.__decorate([
+    common_1.Module({
+        controllers: [search_controller_1.SearchController],
+        providers: [search_service_1.SearchService],
+    })
+], SearchModule);
+exports.SearchModule = SearchModule;
+
+
+/***/ }),
+
+/***/ "./apps/nutrimeal-api/src/app/search/search.service.ts":
+/*!*************************************************************!*\
+  !*** ./apps/nutrimeal-api/src/app/search/search.service.ts ***!
+  \*************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var _a;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SearchService = void 0;
+const tslib_1 = __webpack_require__(/*! tslib */ "tslib");
+const common_1 = __webpack_require__(/*! @nestjs/common */ "@nestjs/common");
+const axios_1 = __webpack_require__(/*! axios */ "axios");
+const config_1 = __webpack_require__(/*! @nestjs/config */ "@nestjs/config");
+let SearchService = class SearchService {
+    constructor(configService) {
+        this.configService = configService;
+    }
+    searchFood(query) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            const nutritionixAppKey = this.configService.get('NUTRITIONIX_APP_KEY');
+            const nutritionixAppId = this.configService.get('NUTRITIONIX_APP_ID');
+            const response = yield axios_1.default.get(`https://trackapi.nutritionix.com/v2/search/instant?query=${query}&branded=false`, {
+                headers: {
+                    'x-app-key': nutritionixAppKey,
+                    'x-app-id': nutritionixAppId,
+                },
+            });
+            return response.data;
+        });
+    }
+};
+SearchService = tslib_1.__decorate([
+    common_1.Injectable(),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _a : Object])
+], SearchService);
+exports.SearchService = SearchService;
+
+
+/***/ }),
+
 /***/ "./apps/nutrimeal-api/src/main.ts":
 /*!****************************************!*\
   !*** ./apps/nutrimeal-api/src/main.ts ***!
@@ -433,6 +551,7 @@ const app_module_1 = __webpack_require__(/*! ./app/app.module */ "./apps/nutrime
 function bootstrap() {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         const app = yield core_1.NestFactory.create(app_module_1.AppModule);
+        app.enableCors();
         const globalPrefix = 'api';
         app.setGlobalPrefix(globalPrefix);
         const port = process.env.PORT || 3333;
@@ -469,6 +588,17 @@ module.exports = require("@nestjs/common");
 
 /***/ }),
 
+/***/ "@nestjs/config":
+/*!*********************************!*\
+  !*** external "@nestjs/config" ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("@nestjs/config");
+
+/***/ }),
+
 /***/ "@nestjs/core":
 /*!*******************************!*\
   !*** external "@nestjs/core" ***!
@@ -488,6 +618,17 @@ module.exports = require("@nestjs/core");
 /***/ (function(module, exports) {
 
 module.exports = require("@nestjs/mongoose");
+
+/***/ }),
+
+/***/ "axios":
+/*!************************!*\
+  !*** external "axios" ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("axios");
 
 /***/ }),
 
